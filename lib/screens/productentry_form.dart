@@ -14,6 +14,8 @@ class _ProductEntryFormPageState extends State<ProductEntryFormPage> {
   String _name = "";
 	String _description = "";
 	int _amount = 0;
+  String _category = "";
+  int _price = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +41,7 @@ class _ProductEntryFormPageState extends State<ProductEntryFormPage> {
               child: TextFormField(
                 decoration: InputDecoration(
                   hintText: "Name",
-                  labelText: "Name",
+                  labelText: "Masukkan Nama Produk",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5.0),
                   ),
@@ -51,7 +53,10 @@ class _ProductEntryFormPageState extends State<ProductEntryFormPage> {
                 },
                 validator: (String? value) {
                   if (value == null || value.isEmpty) {
-                    return "Product name tidak boleh kosong!";
+                    return "Nama Produk tidak boleh kosong!";
+                  }
+                  if (RegExp(r'^-?\d+$').hasMatch(value)){
+                    return "Nama Produk tidak boleh hanya angka!";
                   }
                   return null;
                 },
@@ -62,7 +67,7 @@ class _ProductEntryFormPageState extends State<ProductEntryFormPage> {
               child: TextFormField(
                 decoration: InputDecoration(
                   hintText: "Description",
-                  labelText: "Description",
+                  labelText: "Masukkan Deskripsi Produk",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5.0),
                   ),
@@ -76,6 +81,9 @@ class _ProductEntryFormPageState extends State<ProductEntryFormPage> {
                   if (value == null || value.isEmpty) {
                     return "Description tidak boleh kosong!";
                   }
+                  if (RegExp(r'^-?\d+$').hasMatch(value)){
+                    return "Deksripsi tidak boleh hanya angka!";
+                  }
                   return null;
                 },
               ),
@@ -85,7 +93,7 @@ class _ProductEntryFormPageState extends State<ProductEntryFormPage> {
               child: TextFormField(
                 decoration: InputDecoration(
                   hintText: "Amount",
-                  labelText: "Amount",
+                  labelText: "Masukkan Jumlah Produk",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5.0),
                   ),
@@ -97,10 +105,70 @@ class _ProductEntryFormPageState extends State<ProductEntryFormPage> {
                 },
                 validator: (String? value) {
                   if (value == null || value.isEmpty) {
-                    return "Mood intensity tidak boleh kosong!";
+                    return "Amount tidak boleh kosong!";
                   }
-                  if (int.tryParse(value) == null) {
-                    return "Mood intensity harus berupa angka!";
+                  final parsedValue = int.tryParse(value);
+                  if (parsedValue == null) {
+                    return "Amount harus berupa angka!";
+                  }
+                  if (parsedValue <= 0) {
+                    return "Amount harus berupa angka positif!";
+                  }
+                  return null;
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextFormField(
+                decoration: InputDecoration(
+                  hintText: "Category",
+                  labelText: "Masukkan Kategori Produk",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                  ),
+                ),
+                onChanged: (String? value) {
+                  setState(() {
+                    _category = value!;
+                  });
+                },
+                validator: (String? value) {
+                  if (value == null || value.isEmpty) {
+                    return "Category tidak boleh kosong!";
+                  }
+                  if (RegExp(r'^-?\d+$').hasMatch(value)){
+                    return "Category tidak boleh hanya angka!";
+                  }
+                  return null;
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextFormField(
+                decoration: InputDecoration(
+                  hintText: "Price (Rp)",
+                  labelText: "Masukkan Harga Produk (Rp)",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                  ),
+                ),
+                onChanged: (String? value) {
+                  setState(() {
+                    _price = int.tryParse(value!) ?? 0;
+                  });
+                },
+                validator: (String? value) {
+                  if (value == null || value.isEmpty) {
+                    return "Price (Rp) tidak boleh kosong!";
+                  }
+                  final parsedValue = int.tryParse(value);
+                  if (parsedValue == null) {
+                    return "Price (Rp) harus berupa angka!";
+                  }
+                  if (parsedValue <= 0) {
+                    return "Price (Rp) harus berupa angka positif!";
                   }
                   return null;
                 },
@@ -129,6 +197,8 @@ class _ProductEntryFormPageState extends State<ProductEntryFormPage> {
                                 Text('Name: $_name'),
                                 Text('Description: $_description'),
                                 Text('Amount: $_amount'),
+                                Text('Category: $_category'),
+                                Text('Price: $_price'),
                                 // TODO: Munculkan value-value lainnya
                               ],
                             ),

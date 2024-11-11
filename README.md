@@ -7,6 +7,112 @@ Kelas   : PBP D
 NPM     : 2306152052
 
 <details>
+<summary> <b> Tugas 8: Flutter Navigation, Layouts, Forms, and Input Elements</b> </summary>
+
+# Pertanyaan
+
+## Apa kegunaan const di Flutter? Jelaskan apa keuntungan ketika menggunakan const pada kode Flutter. Kapan sebaiknya kita menggunakan const, dan kapan sebaiknya tidak digunakan?
+`const` di Flutter memiliki kegunaan sebagai pananda nilai konstan atau nilai yang tidak berubah, sehingga diinisiasikannya saat compile-time saja. 
+
+Keuntungan menggunakan `const` diantaranya adalah:
+1. Optimasi Performa: kode yang menggunakan `const` tidak perlu dibuat ulang setiap kali widget di-rebuild. Ini dikarenakan objekk tersebut telah disimpan dalam memori hanya satu kali. Sehingga dapat mengurangi penggunaan memori dan meningkatkan performa
+2. Menjaga Immutabilitas: kode yang menggunakan `const` membuat objeknya bersifat immutable atau tidak dapat diubah. 
+3. Kompilasi Lebih Efisien: Dikarenakan objek yang menggunakan `const` hanya diinisiasikan sekali saat compile-time saja, ini meningkatkan efisiensi kompilasi dan mengurangi runtime.
+4. Hot Reload Lebih Efektif: Dikarenakan flutter tidak perlu merender ulang widget `const`, hot reload menjadi lebih cepat dan efektif.
+
+Kapan sebaiknya kita menggunakan `const`?
+- Ketika menggunakan widget stateless. Ini akan membuat widget tidak berubah setelah dibuat, seperti teks statis, ikon, dekorasi
+- Untuk penggunaan layout. Ini akan berguna untuk membuat layout agar tidak berubah, seperti nilai padding, margin, dan alignment.
+
+Kapan sebaiknya tidak menggunakan `const`?
+- Ketika menggunakan stateful widget atau data yang dinamis. 
+
+## Jelaskan dan bandingkan penggunaan Column dan Row pada Flutter. Berikan contoh implementasi dari masing-masing layout widget ini!
+- `column` digunakan untuk mengatur widget secara vertikal. Ini berarti widget disusun dengan tata letak bertumpuk ke bawah. Contohnya seperti yang saya gunakan pada projek saya di bawah ini
+    ```left_drawer.dart
+    child: const Column(
+        children: [
+            Text(
+                'YESTORE',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                ),
+            ),
+            Padding(padding: EdgeInsets.all(8)),
+            Text(
+                "YES, saya akan membeli apa saja yang dijual!",
+                style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.normal,
+                color: Colors.white,
+                ),
+                textAlign: TextAlign.center,
+                ),
+            ],
+        ),
+    ```
+
+- `row` digunakan untuk mengatur widget secara Horizontal. Ini berarti widget disusun dengan tata letaj ke samping. Contohnya seperti yang saya gunakan pada projek saya di bawah ini
+    ```menu.dart
+    Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+            InfoCard(title: 'NPM', content: npm),
+            InfoCard(title: 'Name', content: name),
+            InfoCard(title: 'Class', content: className),
+            ],
+        ),
+    ```
+
+
+## Sebutkan apa saja elemen input yang kamu gunakan pada halaman form yang kamu buat pada tugas kali ini. Apakah terdapat elemen input Flutter lain yang tidak kamu gunakan pada tugas ini? Jelaskan!
+Pada halaman form, elemen input yang saya gunakan hanyalah `TextFormField`. Masih banyak elemen input pada flutter yang tidak saya gunakan pada tugas kali ini. Diantaranya adalah:
+1. `DropdownButtonFormField`: Berguna untuk memilih nilai dari daftar opsi dalam bentuk dropdown. Seperti memilih jenis produk atau memilih kategori.
+2. `Checkbox`: Checkbox berguna untuk input boolean yang berupa input persetujuan dari pengguna, misalnya keterangan sudah membaca syarat dan ketentuan.
+3. `RadioListTile`: Widget untuk menampilkan opsi radio dengan teks (label) di sebelahnya dalam bentuk daftar. Elemen ini digunakan ketika pengguna perlu memilih satu opsi dari beberapa opsi yang ada
+4. `Switch`: Swicth adalah widgget untuk pengguna memilih antara dua status, aktif atau non-aktif, iya atu tidak. Sering diapakai untuk pengaturan fitur yang hanya memiliki dua opsi.
+5. `Slider`: Widget yang digunakan untuk pengguna memilih nilai dari rentang nilai tertentu dengan cara menggeser. Dapat digunakan untik memilih nilai numerik dalam interval tertentu.
+6. `DatePicker`: Widget yang memungkinkan pengguna untuk memilih tanggal dari tampilan kalender.
+7. `TimePicker`: Widget yang memungkinkan pengguna untuk memilih waktu (jam dan menit) dari tampilan jam analog atau digital
+
+
+## Bagaimana cara kamu mengatur tema (theme) dalam aplikasi Flutter agar aplikasi yang dibuat konsisten? Apakah kamu mengimplementasikan tema pada aplikasi yang kamu buat?
+Untuk mengatur tema aplikasi flutter agar konsisten, bisa didefinisikan di MaterialApp menggunakan `theme`. Pada tugas kali ini, saya mengimplementasikan  `theme`  untuk set color theme nya di `MaterialApp` yang ada di `main.dart`.
+```main.dart
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'YESTORE',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSwatch(
+          primarySwatch: Colors.red,
+        ).copyWith(secondary: const Color.fromARGB(255, 236, 125, 125)),
+        useMaterial3: true,
+      ),
+      home: MyHomePage(),
+    );
+  }
+}
+```
+
+## Bagaimana cara kamu menangani navigasi dalam aplikasi dengan banyak halaman pada Flutter?
+Cara menagani navigasi dalam flutter dapat dengan metode `push`, `pushReplacement` dan `pop`. 
+- `Navigator.push()`: Menambahkan route ke dalam stack route yang dimanage oleh navigaror. Ini membuat pengguna dapat kembali ke page sebelumnya dengan tombol back karena page sebelumnya tidak direplace (tidak di `pop ()`), hanya berapa tepat di bawah new page pada stack route
+
+- `Navigator.pushReplacement()`: Menghapus route yang sedang tidampilkan kepada pengguna dan menggantinya dengan suatu route. Hal ini membuat pengguna tidak dapat kembali ke page sebelumnya dengan tombol back karena page sebelumnya telah dihapus (di `pop()`), sehingga tidak ada di bawah new page pada stack route
+
+- `Navigator.pop()`: Untuk menghapus route yang sedang ditampilkan kepada pengguna. Sehingga page yang berada paling atas di stack route terhapus. Sehingga pengguna akan pindah ke page yang routenya berada di bawah page teratas yang terpop tersebut.
+
+</details>
+
+
+<details>
 <summary> <b> Tugas 7: Elemen Dasar Flutter</b> </summary>
 
 # Pertanyaan
@@ -241,3 +347,4 @@ Sebenarnya, keduanya memiliki kesamaan dimana bertujuan untuk membuat nilai yang
     ```
 
 </details>
+

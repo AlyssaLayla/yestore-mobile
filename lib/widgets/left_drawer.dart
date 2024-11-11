@@ -28,8 +28,7 @@ class LeftDrawer extends StatelessWidget {
               ),
               Padding(padding: EdgeInsets.all(8)),
               Text(
-                "YES untuk apa saja yang dijual!",
-                // TODO: Tambahkan gaya teks dengan center alignment, font ukuran 15, warna putih, dan weight biasa
+                "YES, saya akan membeli apa saja yang dijual!",
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.normal,
