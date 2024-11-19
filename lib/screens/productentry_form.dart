@@ -1,4 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
+import 'package:yestore_mobile/screens/menu.dart';
 // TODO: Impor drawer yang sudah dibuat sebelumnya
 
 
@@ -13,12 +18,13 @@ class _ProductEntryFormPageState extends State<ProductEntryFormPage> {
   final _formKey = GlobalKey<FormState>();
   String _name = "";
 	String _description = "";
-	int _amount = 0;
+	int _quantity = 0;
   String _category = "";
   int _price = 0;
 
   @override
   Widget build(BuildContext context) {
+    final request = context.watch<CookieRequest>();
         return Scaffold(
       appBar: AppBar(
         title: const Center(
@@ -92,7 +98,7 @@ class _ProductEntryFormPageState extends State<ProductEntryFormPage> {
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
                 decoration: InputDecoration(
-                  hintText: "Amount",
+                  hintText: "Quantity",
                   labelText: "Masukkan Jumlah Produk",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5.0),
@@ -100,19 +106,19 @@ class _ProductEntryFormPageState extends State<ProductEntryFormPage> {
                 ),
                 onChanged: (String? value) {
                   setState(() {
-                    _amount = int.tryParse(value!) ?? 0;
+                    _quantity = int.tryParse(value!) ?? 0;
                   });
                 },
                 validator: (String? value) {
                   if (value == null || value.isEmpty) {
-                    return "Amount tidak boleh kosong!";
+                    return "Quantity tidak boleh kosong!";
                   }
                   final parsedValue = int.tryParse(value);
                   if (parsedValue == null) {
-                    return "Amount harus berupa angka!";
+                    return "Quantity harus berupa angka!";
                   }
                   if (parsedValue <= 0) {
-                    return "Amount harus berupa angka positif!";
+                    return "Quantity harus berupa angka positif!";
                   }
                   return null;
                 },
@@ -183,40 +189,41 @@ class _ProductEntryFormPageState extends State<ProductEntryFormPage> {
                   backgroundColor: WidgetStateProperty.all(
                       Theme.of(context).colorScheme.primary),
                 ),
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: const Text('Mood berhasil tersimpan'),
-                          content: SingleChildScrollView(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Name: $_name'),
-                                Text('Description: $_description'),
-                                Text('Amount: $_amount'),
-                                Text('Category: $_category'),
-                                Text('Price: $_price'),
-                                // TODO: Munculkan value-value lainnya
-                              ],
-                            ),
-                          ),
-                        actions: [
-                          TextButton(
-                            child: const Text('OK'),
-                            onPressed: () {
-                              Navigator.pop(context);
-                              _formKey.currentState!.reset();
-                            },
-                          ),
-                        ],
-                      );
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        final response = await request.postJson(
+                          "http://localhost:8000/create-flutter/",
+                          jsonEncode(<String, String>{
+                            'name': _name,
+                            'description': _description,
+                            'quantity': _quantity.toString(),
+                            'category': _category,
+                            'price': _price.toString(),
+                          }),
+                        );
+                        if (context.mounted) {
+                          if (response['status'] == 'success') {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("Produk baru berhasil disimpan!"),
+                              ),
+                            );
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => MyHomePage()),
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                    "Terdapat kesalahan, silakan coba lagi."),
+                              ),
+                            );
+                          }
+                        }
+                      }
                     },
-                  );
-                  }
-                },
                 child: const Text(
                   "Save",
                   style: TextStyle(color: Colors.white),

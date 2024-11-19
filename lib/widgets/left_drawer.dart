@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:yestore_mobile/screens/list_productentry.dart';
 import 'package:yestore_mobile/screens/menu.dart';
 import 'package:yestore_mobile/screens/productentry_form.dart';
 
@@ -53,7 +54,7 @@ class LeftDrawer extends StatelessWidget {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.mood),
+              leading: const Icon(Icons.add_circle_outlined),
               title: const Text('Tambah Produk'),
               // Bagian redirection ke MoodEntryFormPage
               onTap: () {
@@ -67,6 +68,16 @@ class LeftDrawer extends StatelessWidget {
                       builder: (context) => const ProductEntryFormPage(),
                     ));
               },
+            ),
+            ListTile(
+                leading: const Icon(Icons.local_grocery_store_outlined),
+                title: const Text('Daftar Produk'),
+                onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const ProductEntryPage()),
+                    );
+                },
             ),
         ],
       ),
